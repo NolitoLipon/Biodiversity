@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Learning and Activities</title>
+<style>
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:Arial,Helvetica,sans-serif;color:#ffffff}
+body{background-image:url('img/home.jpg');background-size:cover;background-position:center;}
+
+header{height:64px;background:#1d5c2e;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 24px}
+.brand{font-weight:700}
+nav{display:flex;gap:18px}
+nav div{cursor:default}
+
+main{min-height:calc(100vh - 124px);padding:28px 20px;text-align:center}
+h1{margin:8px 0 4px;font-size:28px}
+h2{margin:0 0 18px;color:#85ffa7;font-weight:600}
+
+.actions{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;text-align:center}
+.btn{background:#4caf50;color:#fff;border:0;padding:18px 28px;border-radius:12px;font-size:18px;cursor:pointer;min-width:320px;display:flex;justify-content:center;align-items:center}
+.btn:hover{background:#3b9f3f}
+
+.activity{display:none;height:calc(100vh - 64px);overflow:hidden}
+.activity.fullscreen{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:22px;background-size:cover;background-position:center}
+
+.top-controls{width:100%;display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:12px}
+.control-left{display:flex;gap:10px}
+.exit,.restart{background:#c62828;color:#fff;border:0;padding:8px 12px;border-radius:8px;cursor:pointer}
+.restart{background:#1b5e20}
+
+.drop-row{display:flex;gap:20px;width:100%;max-width:1100px;margin:18px auto;justify-content:center}
+.dropzone{flex:1;min-height:180px;border:3px dashed rgba(27,94,32,0.9);border-radius:16px;background:rgba(1, 50, 32, 0.6);display:flex;align-items:center;justify-content:center;font-weight:700}
+#dragArea{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:1100px;margin:16px auto;padding:8px;overflow:auto}
+.drag-item{width:110px;height:110px;border-radius:10px;border:2px solid #23723a;object-fit:cover;cursor:grab;transition:transform .15s,box-shadow .15s}
+.drag-item:active{transform:scale(1.08);box-shadow:0 8px 20px rgba(0,0,0,.25)}
+.dropzone.highlight{background:rgba(165,244,165,0.8);border-color:#00c853}
+
+
+.question{font-size:22px;margin:14px 0}
+.choices{display:flex;flex-direction:column;gap:12px;align-items:center}
+.choice{
+  width:300px;           
+  height:60px;           
+  line-height:60px;      
+  border-radius:10px;
+  border:2px solid #2e7d32;
+  background:#458551;
+  cursor:pointer;
+  text-align:center;
+  font-size:18px;
+  transition:background 0.2s,transform 0.15s;
+}
+.choice:hover{background:#046c38;transform:scale(1.05)}
+
+
+.tfBtns{display:flex;gap:18px;justify-content:center;margin-top:12px}
+.tfBtns button{
+  padding:14px 28px;
+  border-radius:8px;
+  border:0;
+  background:#4caf50;
+  color:#fff;
+  font-size:18px;
+  cursor:pointer;
+  transition:background 0.2s,transform 0.15s;
+}
+.tfBtns button:hover{background:#81c784;transform:scale(1.05)}
+
+
+footer{position:fixed;left:0;right:0;bottom:0;background:#1d5c2e;color:#fff;padding:10px 14px;text-align:center}
+footer small{display:block;opacity:.9}
+
+
+@media(min-width:900px){h1{font-size:34px}}
+
+
+
+
+#menu {
+  position: relative;
+  min-height: calc(100vh - 124px); 
+}
+
+#menu .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 101%;
+  background: rgba(1,50,32,0.55); 
+  backdrop-filter: blur(6px);    
+  z-index: 0;                     
+}
+
+#menu .overlay-content {
+  position: relative;
+  z-index: 1;      
+  color: #fff;
+  text-align: center;
+  padding: 28px 20px;
+}
+
+#menu .overlay h2 {
+  color: #c8ffc8;   
+  margin-bottom: 24px;
+}
+
+#menu .overlay .btn {
+  background: #4caf50;
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  transition: background 0.2s, transform 0.15s, box-shadow 0.15s;
+}
+
+#menu .overlay .btn:hover {
+  background: #3b9f3f;
+  transform: scale(1.05);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+}
+
+
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">Biodiversity Learning Hub</div>
+  <div>
+            <ul style="
+                list-style:none;
+                display:flex;
+                gap:35px;
+                margin:0;
+                padding:0;
+                font-size:1.1rem;
+                font-weight:600;
+            ">
+                <li><a href="home.html" style="color:#ecfdf5;text-decoration:none;">Home</a></li>
+                <li><a href="map.html" style="color:#ecfdf5;text-decoration:none;">Discover</a></li>
+                <li><a href="threatsimpact.html" style="color:#ecfdf5;text-decoration:none;">Threats</a></li>
+                 <li><a href="solutions.html" style="color:#ecfdf5;text-decoration:none;">Solutions</a></li>
+                <li><a href="index.html" style="color:#ecfdf5;text-decoration:none;">Learning & Activities</a></li>
+            </ul>
+        </div>
+</header>
+
+<main id="menu">
+  <div class="overlay"></div> 
+  
+  <div class="overlay-content">
+    <h1>Learning and Activities</h1>
+    <h2>Choose an activity to explore biodiversity and a healthy society</h2>
+
+    <div class="actions">
+      <button class="btn" id="btnDrag">Drag & Drop</button>
+      <button class="btn" id="btnMCQ">Multiple Choice</button>
+      <button class="btn" id="btnTF">True or False</button>
+    </div>
+
+    
+  </div>
+</main>
+
+
+<!-- Drag & Drop activity -->
+<section id="dragActivity" class="activity fullscreen" style="background-image:url('');">
+  <div class="top-controls">
+    <div class="control-left">
+      <button class="exit" id="exitDrag">Exit</button>
+      <button class="restart" id="restartDrag">Restart</button>
+    </div>
+    <div style="font-weight:700;color:#08361a"></div>
+    <div></div>
+  </div>
+
+  <div class="drop-row">
+    <div class="dropzone" id="bioZone">Biodegradable</div>
+    <div class="dropzone" id="nonBioZone">Non-Biodegradable</div>
+  </div>
+
+  <div id="dragArea" aria-label="drag items area"></div>
+</section>
+
+<!-- MCQ -->
+<section id="mcqActivity" class="activity fullscreen" style="background-image:url('img/mc.jpg');">
+  <div class="top-controls">
+    <div class="control-left">
+      <button class="exit" id="exitMCQ">Exit</button>
+      <button class="restart" id="restartMCQ">Restart</button>
+    </div>
+    <div style="font-weight:700;color:#86fcb3"></div>
+    <div></div>
+  </div>
+
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center">
+    <div class="question" id="mcqQuestion"></div>
+    <div class="choices" id="mcqChoices"></div>
+    <div style="margin-top:18px;font-weight:700" id="mcqScore"></div>
+  </div>
+</section>
+
+<!-- True/False -->
+<section id="tfActivity" class="activity fullscreen" style="background-image:url('img/tf.jpg');">
+  <div class="top-controls">
+    <div class="control-left">
+      <button class="exit" id="exitTF">Exit</button>
+      <button class="restart" id="restartTF">Restart</button>
+    </div>
+    <div style="font-weight:700;color:#08361a"></div>
+    <div></div>
+  </div>
+
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center">
+    <div class="question" id="tfQuestion"></div>
+    <div class="tfBtns">
+      <button id="btnTrue">True</button>
+      <button id="btnFalse">False</button>
+    </div>
+    <div style="margin-top:18px;font-weight:700" id="tfScore"></div>
+  </div>
+</section>
+
+<footer id="pageFooter">
+  Members: Gerasmio | Capuno | Cresel | Lipon | Bayno
+  <small>"This educational activity website aims to promote biodiversity knowledge and awareness for a healthier society."</small>
+</footer>
+
+<script>
+/* ========== DATA ARRAYS ========== */
+const dragItems = [
+  {img:'img/banana.webp', type:'bio'},
+  {img:'img/leaves3.avif', type:'bio'},
+  {img:'img/paper2.webp', type:'bio'},
+  {img:'img/apple.avif', type:'bio'},
+  {img:'img/eggshell.webp', type:'bio'},
+  {img:'img/grass.jpg', type:'bio'},
+  {img:'img/cardboard3.jpg', type:'bio'},
+  {img:'img/rice.jpg', type:'bio'},
+  {img:'img/corn.jpg', type:'bio'},
+  {img:'img/bottle.jpg', type:'non'},
+  {img:'img/can.jpg', type:'non'},
+  {img:'img/plastic.jpg', type:'non'},
+  {img:'img/styrofoam.jpg', type:'non'},
+  {img:'img/straw.avif', type:'non'},
+  {img:'img/toyplastic.jpg', type:'non'}
+];
+
+let mcqQ = [
+  {q:'Biodiversity provides humans with?',c:['Food and clean air','Robots','Concrete'],a:'Food and clean air'},
+  {q:'What habitat supports coral species?',c:['Roads','Desert','Coral reefs'],a:'Coral reefs'},
+  {q:'Mangroves help by?',c:['Adding trash','Reducing storm damage','Making smoke'],a:'Reducing storm damage'},
+  {q:'Bees are important because they?',c:['Create plastic','Pollinate plants','Break trees'],a:'Pollinate plants'},
+  {q:'Which ecosystem cleans water?',c:['Factories','Wetlands','Traffic'],a:'Wetlands'},
+  {q:'Plants give?',c:['Smoke','Metal','Oxygen'],a:'Oxygen'},
+  {q:'Marine biodiversity is highest in?',c:['Parking lots','Coral reefs','Subway'],a:'Coral reefs'},
+  {q:'Trees help climate by?',c:['Absorbing CO₂','Making noise','Producing plastic'],a:'Absorbing CO₂'},
+  {q:'Pollution affects?',c:['No one','Only rocks','All living organisms'],a:'All living organisms'},
+  {q:'Which supports fish breeding?',c:['Concrete floor','Seagrass beds','Trash piles'],a:'Seagrass beds'},
+  {q:'A healthy society needs?',c:['Broken rivers','Healthy ecosystems','Trash dumps'],a:'Healthy ecosystems'},
+  {q:'Coral bleaching happens due to?',c:['Warm water','Cold food','Music'],a:'Warm water'},
+  {q:'Overfishing causes?',c:['Species decline','More fish','Cleaner ocean'],a:'Species decline'},
+  {q:'Trees prevent?',c:['Soil erosion','Littering','Wi-Fi drop'],a:'Soil erosion'},
+  {q:'Less biodiversity means?',c:['Weaker ecosystems','Stronger storms','More malls'],a:'Weaker ecosystems'}
+];
+
+let tfQ = [
+  {q:'Plants produce oxygen.',a:true},
+  {q:'Pollution improves habitat.',a:false},
+  {q:'Recycling can help protect biodiversity.',a:true},
+  {q:'Overfishing harms ocean balance.',a:true},
+  {q:'Forests provide oxygen.',a:true},
+  {q:'Plastic has no effect on marine life.',a:false},
+  {q:'Oceans affect climate.',a:true},
+  {q:'Wetlands filter water.',a:true},
+  {q:'Bees are pollinators.',a:true},
+  {q:'Coral reefs are unaffected by warming.',a:false},
+  {q:'Healthy biodiversity supports society.',a:true},
+  {q:'Cutting trees increases oxygen.',a:false},
+  {q:'Mangroves protect coastlines.',a:true},
+  {q:'Trash in seas is safe for fish.',a:false},
+  {q:'Diverse species mean stronger ecosystems.',a:true}
+];
+
+function shuffle(a){return a.sort(()=>Math.random()-0.5)}
+
+
+function hideMenu(){
+    document.getElementById('menu').style.display='none';
+    document.getElementById('pageFooter').style.display='none';
+    document.body.style.overflow='hidden';
+}
+
+function showMenu(){
+    document.getElementById('menu').style.display='block';
+    document.getElementById('pageFooter').style.display='block';
+    document.querySelectorAll('.activity').forEach(a=>a.style.display='none');
+    document.body.style.backgroundImage="url('img/smoke foresttt.gif')";
+    document.body.style.overflow='auto';
+}
+
+/* ========== DRAG & DROP ========== */
+let dragScore=0, draggedCount=0;
+function startDragDrop(){
+    hideMenu();
+    dragScore=0; draggedCount=0;
+    const section=document.getElementById('dragActivity');
+    section.style.display='flex';
+    document.body.style.backgroundImage="url('img/smoke foresttt.gif')";
+    const area=document.getElementById('dragArea');
+    area.innerHTML='';
+    const items = shuffle(dragItems.slice());
+    items.forEach(it=>{
+        const img=document.createElement('img');
+        img.src=it.img; img.className='drag-item'; img.draggable=true; img.dataset.type=it.type;
+        img.addEventListener('dragstart', e=>e.dataTransfer.setData('type', it.type));
+        area.appendChild(img);
+    });
+}
+
+/* Drop zones */
+['bioZone','nonBioZone'].forEach(id=>{
+    const z=document.getElementById(id);
+    z.ondragover=e=>{e.preventDefault(); z.classList.add('highlight');};
+    z.ondragleave=()=> z.classList.remove('highlight');
+    z.ondrop=e=>{
+        e.preventDefault(); z.classList.remove('highlight');
+        const type = e.dataTransfer.getData('type'); draggedCount++;
+        if((type==='bio' && id==='bioZone')||(type==='non' && id==='nonBioZone')) dragScore++;
+        if(draggedCount===dragItems.length) setTimeout(()=>alert(`Drag & Drop complete! Score: ${dragScore}/${dragItems.length}`),200);
+    };
+});
+
+/* ========== MCQ ========== */
+let mcIndex=0, mcScore=0;
+function startMCQ(){
+    hideMenu();
+    mcIndex=0; mcScore=0;
+    shuffle(mcqQ);
+    document.getElementById('mcqActivity').style.display='flex';
+    document.body.style.backgroundImage="url('img/wpforest5.jpg')";
+    renderMCQ();
+}
+function renderMCQ(){
+    if(mcIndex>=mcqQ.length){ alert(`Multiple Choice completed! Score: ${mcScore}/${mcqQ.length}`); return; }
+    const q = mcqQ[mcIndex];
+    document.getElementById('mcqQuestion').textContent = q.q;
+    const choices = document.getElementById('mcqChoices');
+    choices.innerHTML='';
+    q.c.forEach(ch=>{
+        const d = document.createElement('div'); d.className='choice'; d.textContent = ch;
+        d.onclick = ()=>{ if(ch===q.a) mcScore++; mcIndex++; renderMCQ(); };
+        choices.appendChild(d);
+    });
+}
+
+/* ========== TRUE / FALSE ========== */
+let tfIndex=0, tfScore=0;
+function startTF(){
+    hideMenu();
+    tfIndex=0; tfScore=0;
+    shuffle(tfQ);
+    document.getElementById('tfActivity').style.display='flex';
+    document.body.style.backgroundImage="url('img/wpforest.jpg')";
+    renderTF();
+}
+function renderTF(){
+    if(tfIndex>=tfQ.length){ alert(`True/False completed! Score: ${tfScore}/${tfQ.length}`); return; }
+    document.getElementById('tfQuestion').textContent = tfQ[tfIndex].q;
+}
+document.getElementById('btnTrue').onclick=()=>{
+    if(tfIndex<tfQ.length){ if(tfQ[tfIndex].a===true) tfScore++; tfIndex++; renderTF(); }
+};
+document.getElementById('btnFalse').onclick=()=>{
+    if(tfIndex<tfQ.length){ if(tfQ[tfIndex].a===false) tfScore++; tfIndex++; renderTF(); }
+};
+
+/* Buttons */
+document.getElementById('btnDrag').onclick=startDragDrop;
+document.getElementById('btnMCQ').onclick=startMCQ;
+document.getElementById('btnTF').onclick=startTF;
+['exitDrag','exitMCQ','exitTF'].forEach(id=>document.getElementById(id).onclick=showMenu);
+['restartDrag','restartMCQ','restartTF'].forEach(id=>{
+    document.getElementById(id).onclick=()=>{
+        if(id==='restartDrag') startDragDrop();
+        if(id==='restartMCQ') startMCQ();
+        if(id==='restartTF') startTF();
+    };
+});
+
+
+showMenu();
+
+</script>
+</body>
+</html>

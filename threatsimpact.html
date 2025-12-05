@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>EcoNomix – Threats & Impact</title>
+    <style>
+        /* ===== BODY ===== */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #0e1b12; /* Dark forest green */
+            color: #f0fff4;
+        }
+
+        /* ===== TOPBAR ===== */
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(180, 180, 180, 0.3);
+            padding: 15px 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: white;
+        }
+
+        /* ===== NAV ===== */
+        nav a {
+            color: white;
+            margin: 0 18px;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        nav a:hover,
+        nav a.active {
+            color: #a8ffb0; /* Light green highlight */
+        }
+
+        /* ===== INTRO ===== */
+        .intro {
+            padding: 40px;
+            text-align: center;
+        }
+
+        /* ===== THREATS ===== */
+        .threats-section {
+            width: 85%;
+            margin: 0 auto;
+        }
+
+        .threat {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            margin-bottom: 25px;
+            border-left: 5px solid #4CAF50;
+            display: flex;
+            gap: 20px;
+            border-radius: 8px;
+        }
+
+        .threat img {
+            width: 200px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        /* ===== SLIDER SECTION ===== */
+        .slider-section {
+            width: 85%;
+            margin: 50px auto;
+            text-align: center;
+        }
+
+        .before-after-container {
+            position: relative;
+            max-width: 700px;
+            margin: 20px auto;
+            height: 412px; /* Fixed height for both images */
+            
+        }
+
+        .before-after-container img {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        .after-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 50%;
+            height: 100%; /* match container height */
+            overflow: hidden;
+            transition: width 0.3s;
+        }
+
+        .after-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* ensures the image fits the container */
+            border-radius: 10px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: #0b150e;
+            padding: 25px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        footer a {
+            color: #86ff97;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER + NAV -->
+    <header class="topbar">
+        <div class="logo">EcoNomix</div>
+        <nav>
+            <a href="home.html">Home</a>
+            <a href="map.html">Discover</a>
+            <a href="threatsimpact.html" class="active">Threats</a>
+            <a href="solutions.html">Solutions</a>
+            <a href="index.html">Learning & Activities</a>
+        </nav>
+    </header>
+
+    <!-- INTRO -->
+    <section class="intro">
+        <h1>Threats & Impact on Philippine Biodiversity</h1>
+        <p>
+            The Philippines is one of the most biologically diverse countries in the world, home to lush forests,
+            vibrant coral reefs, and countless unique species. However, rapid human development, pollution, and climate
+            change are putting these natural treasures at serious risk. Understanding the main problems facing our environment
+            is the first step toward protecting our forests, oceans, and wildlife for future generations.
+        </p>
+        <p>Here are the <strong>three major problems</strong> affecting the country today.</p>
+    </section>
+
+    <!-- 3 MAIN THREATS BEFORE INTERACTIVITY -->
+    <section class="threats-section">
+        <div class="threat">
+            <img src="./picturegggg/deforestation.jpg"   alt="Deforestation">
+            <div>
+                <h2>1. Deforestation</h2>
+                <p>
+                    Illegal logging, agricultural expansion, and mining destroy large portions
+                    of Philippine forests, harming wildlife and local communities.
+                </p>
+            </div>
+        </div>
+
+        <div class="threat">
+            <img src="./picturegggg/pollution.jpg" alt="Pollution">
+            <div>
+                <h2>2. Pollution</h2>
+                <p>
+                    Plastics, factory waste, and water contamination threaten marine life,
+                    rivers, and ecosystems across the country.
+                </p>
+            </div>
+        </div>
+
+        <div class="threat">
+            <img src="./picturegggg/change.jpg" alt="Climate Change">
+            <div>
+                <h2>3. Climate Change / Habitat Loss</h2>
+                <p>
+                    Rising temperatures, stronger typhoons, and flooding destroy coral reefs,
+                    forests, and habitats where many species live.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- BEFORE & AFTER INTERACTIVITY -->
+    <section class="slider-section">
+        <h2>Forest Condition: Before and After</h2>
+        <div class="before-after-container">
+            <img src="./picturegggg/before.jpg" class="before-img" alt="Forest Before">
+            <div class="after-img" id="afterReveal">
+                <img src="./picturegggg/after.jpg" alt="Forest After">
+            </div>
+            <input type="range" min="1" max="100" value="50" id="slider">
+        </div>
+    </section>
+
+    <script>
+        const slider = document.getElementById("slider");
+        const afterReveal = document.getElementById("afterReveal");
+
+        slider.oninput = function () {
+            afterReveal.style.width = this.value + "%";
+        }
+    </script>
+
+    <!-- FOOTER -->
+    <footer>
+        <p><a href="about.html">About Us</a></p>
+        <p>© 2025 EcoNomix – Biodiversity for a Healthy Society</p>
+    </footer>
+
+</body>
+</html>

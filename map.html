@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Interactive Map - Philippines Biodiversity</title>
+
+<style>
+:root{
+    --green:#0d5e3d;
+}
+
+/* GENERAL */
+body{
+    margin:0;
+    font-family: Arial, Helvetica, sans-serif;
+    padding-top:60px;
+    color:white;
+}
+
+/* NAV BAR */
+#navbar{
+    width:100%;
+    background:#0d5e3d;
+    padding:12px;
+    display:flex;
+    justify-content:center;
+    gap:25px;
+    position:fixed;
+    top:0;
+    left:0;
+    z-index:2000;
+}
+#navbar a{
+    color:white;
+    font-weight:bold;
+    text-decoration:none;
+}
+
+/* BACKGROUND VIDEO */
+#bgVideo{
+    position:fixed;
+    right:0;
+    bottom:0;
+    min-width:100%;
+    min-height:100%;
+    z-index:-1;
+    object-fit:cover;
+}
+
+/* HEADER */
+header{
+    text-align:center;
+    font-size:25px;
+    color:white;
+    font-weight:bold;
+    text-shadow:1px 1px 3px black;
+    margin-bottom:20px;
+}
+
+/* MAIN ROW */
+#mainRow{
+    width:92%;
+    max-width:1200px;
+    margin:0 auto;
+    display:flex;
+    justify-content:center;
+}
+
+/* MINI MAP */
+#miniMap{
+    border:3px solid var(--green);
+    border-radius:10px;
+    padding:10px;
+    background:white;
+    position:relative;
+    cursor:pointer;
+}
+#miniMap img{
+    width:400px;
+    border-radius:10px;
+}
+
+/* PINS */
+.pin{
+    width:12px;
+    height:12px;
+    background:#27ae60;
+    position:absolute;
+    border-radius:50%;
+    border:2px solid white;
+    cursor:pointer;
+}
+
+/* SIDEBAR BOXES */
+#speciesBox, #infoBox{
+    width:50%;
+    background:rgba(255,255,255,0.5);
+    color:black;
+    padding:12px;
+    border-radius:9px;
+    backdrop-filter:blur(4px);
+    transition: all 0.3s ease;
+}
+
+/* LAYOUT FOR BOXES */
+#boxRow{
+    width:80%;
+    max-width:995px;
+    margin:20px auto;
+    display:flex;
+    gap:25px;
+}
+
+/* SPECIES CARDS */
+.species-card{
+    background:white;
+    color:black;
+    padding:10px;
+    border-radius:8px;
+    display:flex;
+    gap:12px;
+    margin-bottom:10px;
+    cursor:pointer;
+    transition: transform 0.2s ease;
+}
+.species-card:hover{
+    transform: scale(1.05);
+}
+.species-card img{
+    width:55px;
+    height:55px;
+    border-radius:5px;
+    object-fit:cover;
+}
+
+/* PIN POPUP */
+#pinPopup{
+    display:none;
+    position:fixed;
+    top:100px;
+    left:50%;
+    transform:translateX(-50%);
+    width:300px;
+    background:white;
+    color:black;
+    padding:12px;
+    border-radius:10px;
+    z-index:5000;
+    box-shadow:0 10px 30px rgba(0,0,0,0.3);
+}
+#pinPopup img{
+    width:100%;
+    height:150px;
+    object-fit:cover;
+    border-radius:6px;
+}
+
+/* SPECIES POPUP */
+#speciesPopup{
+    display:none;
+    position:fixed;
+    top:100px;
+    left:50%;
+    transform:translateX(-50%);
+    width:300px;
+    background:white;
+    color:black;
+    padding:12px;
+    border-radius:10px;
+    z-index:5000;
+    box-shadow:0 10px 30px rgba(0,0,0,0.3);
+}
+#speciesPopup img{
+    width:100%;
+    height:150px;
+    object-fit:cover;
+    border-radius:6px;
+}
+
+/* LARGE MAP MODAL */
+#mapModal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.65);
+    justify-content:center;
+    align-items:center;
+    z-index:3000;
+}
+#mapModal .panel{
+    background:white;
+    padding:10px;
+    border-radius:10px;
+    position:relative;
+    width:80%;
+    max-width:450px;
+}
+#mapModal img{
+    width:100%;
+    border-radius:10px;
+}
+.closeMapBtn{
+    position:absolute;
+    right:15px;
+    top:10px;
+    cursor:pointer;
+    font-size:20px;
+}
+
+/* ANIMATIONS */
+.fade-slide-down {
+    animation: fadeSlideDown 0.5s ease forwards;
+}
+.fade-slide-up {
+    animation: fadeSlideUp 0.5s ease forwards;
+}
+.fade-in {
+    animation: fadeIn 0.5s ease forwards;
+}
+@keyframes fadeSlideDown {
+    0% { opacity: 0; transform: translateY(-20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeSlideUp {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+</style>
+</head>
+<body>
+
+<!-- BACKGROUND VIDEO -->
+<video autoplay muted loop id="bgVideo">
+    <source src="https://v1.pinimg.com/videos/mc/720p/b6/86/58/b686586d54c23405078766ba8f59c51e.mp4" type="video/mp4">
+</video>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+    <a href="index.html">HOME</a>
+    <a href="threatsimpact.html">THREATS</a>
+    <a href="solutions.html">SOLUTION</a>
+    <a href="map.html">DISCOVER</a>
+    <a href="discover.html">LEARNING ACTIVITIES</a>
+</nav>
+
+<header>Interactive Map of the Philippines — Biodiversity Hotspot</header>
+
+<!-- MINI MAP -->
+<div id="mainRow">
+    <div id="miniMap" onclick="openMapModal()">
+        <img src="https://i.pinimg.com/1200x/3d/9a/ce/3d9acebd20014ebb83381ade09ce31db.jpg">
+
+        <!-- PINS -->
+        <div class="pin" style="top:66%; left:70%;" onclick="openPin(event,'Bohol')"></div>
+        <div class="pin" style="top:50%; left:38%;" onclick="openPin(event,'Mindoro')"></div>
+        <div class="pin" style="top:89%; left:80%;" onclick="openPin(event,'Davao Oriental Crocodile')"></div>
+        <div class="pin" style="top:66%; left:64%;" onclick="openPin(event,'Cebu')"></div>
+        <div class="pin" style="top:25%; left:36%;" onclick="openPin(event,'Baguio')"></div>
+        <div class="pin" style="top:68%; left:19%;" onclick="openPin(event,'Palawan')"></div>
+        <div class="pin" style="top:85%; left:85%;" onclick="openPin(event,'Davao')"></div>
+        <div class="pin" style="top:59%; left:75%;" onclick="openPin(event,'Leyte')"></div>
+        <div class="pin" style="top:72%; left:85%;" onclick="openPin(event,'Siargao')"></div>
+    </div>
+</div>
+
+<!-- TWO BOXES -->
+<div id="boxRow">
+
+    <!-- SPECIES BOX -->
+    <div id="speciesBox">
+        <h2>Species Profile</h2>
+
+        <div class="species-card" onclick="openSpecies(
+            'Land',
+            'Philippine Tarsier',
+            'World\'s smallest primate. Endemic to the Philippines. Known for its huge eyes and nocturnal habits. Sensitive to habitat disturbance and requires dense forest canopy for survival. Local studies show education and forest preservation help its population.',
+            'https://i.pinimg.com/736x/b6/de/3b/b6de3b0c97f2741ba9e793d4c47dde39.jpg'
+        )">
+            <img src="https://i.pinimg.com/736x/4c/68/22/4c6822b4e83548a1c9a415d520b32d19.jpg">
+            Land
+        </div>
+
+        <div class="species-card" onclick="openSpecies(
+            'Water',
+            'Tamaraw',
+            'Endemic dwarf buffalo found only in Mindoro. Critically endangered due to hunting and habitat loss. Prefers grasslands and forested valleys. Local studies in Mounts Iglit-Baco show successful recovery in protected areas.',
+            'https://upload.wikimedia.org/wikipedia/commons/0/0b/Bubalus_mindorensis_by_Gregg_Yan_01.jpg'
+        )">
+            <img src="https://t4.ftcdn.net/jpg/04/64/54/23/360_F_464542322_CaVd4Avs9p9XaGOWsErmg1528s5qBMnu.jpg">
+            Water
+        </div>
+
+        <div class="species-card" onclick="openSpecies(
+            'Air',
+            'Philippine Eagle',
+            'Critically endangered national bird of the Philippines. Wingspan up to 7 feet. Feeds on monkeys and flying lemurs. Local studies include nest monitoring and forest protection programs.',
+            'https://www.discoverthephilippines.com/wp-content/uploads/2023/07/philippine-eagle.jpg'
+        )">
+            <img src="https://i.pinimg.com/1200x/e4/17/2d/e4172de994748caa67f5ac885d20b351.jpg">
+            Air
+        </div>
+
+        <div class="species-card" onclick="openSpecies(
+            'Coral',
+            'Coral Reef',
+            'Supports diverse marine species including fish, mollusks, and crustaceans. Provides coastal protection. Local studies in Apo Reef show community-based management improves reef health.',
+            'https://i.pinimg.com/1200x/db/15/31/db15317d845dbe9a819f098a5b3a5bca.jpg'
+        )">
+            <img src="https://i.pinimg.com/1200x/db/15/31/db15317d845dbe9a819f098a5b3a5bca.jpg">
+            Coral
+        </div>
+    </div>
+
+    <!-- INFO BOX -->
+    <div id="infoBox">
+        <h2>Information</h2>
+        <h3 id="infoTitle">Select a pin</h3>
+        <p id="infoText">Information will appear here based on local studies.</p>
+    </div>
+</div>
+
+<!-- PIN POPUP -->
+<div id="pinPopup">
+    <span style="float:right; cursor:pointer;" onclick="closePin()">✖</span>
+    <h3 id="pinTitle"></h3>
+    <img id="pinImg">
+    <p id="pinSci"></p>
+    <a id="discoverMore" style="color:green; cursor:pointer;">Discover More →</a>
+</div>
+
+<!-- SPECIES POPUP -->
+<div id="speciesPopup">
+    <span style="float:right; cursor:pointer;" onclick="closeSpecies()">✖</span>
+    <h3 id="speciesTitle"></h3>
+    <img id="speciesImg">
+    <p id="speciesDesc"></p>
+</div>
+
+<!-- LARGE MAP -->
+<div id="mapModal" onclick="closeModalOutside(event)">
+    <div class="panel">
+        <span class="closeMapBtn" onclick="closeMap()">✖</span>
+        <div style="position:relative;">
+            <img src="https://i.pinimg.com/1200x/3d/9a/ce/3d9acebd20014ebb83381ade09ce31db.jpg">
+            <div class="pin" style="top:66%; left:70%;" onclick="openPin(event,'Bohol')"></div>
+            <div class="pin" style="top:50%; left:38%;" onclick="openPin(event,'Mindoro')"></div>
+            <div class="pin" style="top:89%; left:80%;" onclick="openPin(event,'Davao Oriental Crocodile')"></div>
+            <div class="pin" style="top:66%; left:64%;" onclick="openPin(event,'Cebu')"></div>
+            <div class="pin" style="top:25%; left:36%;" onclick="openPin(event,'Baguio')"></div>
+            <div class="pin" style="top:68%; left:19%;" onclick="openPin(event,'Palawan')"></div>
+            <div class="pin" style="top:85%; left:85%;" onclick="openPin(event,'Davao')"></div>
+            <div class="pin" style="top:59%; left:75%;" onclick="openPin(event,'Leyte')"></div>
+            <div class="pin" style="top:72%; left:85%;" onclick="openPin(event,'Siargao')"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+const pinData = {
+    "Palawan": {
+        sci: "Polyplectron napoleonis",
+        info: "Endemic to Palawan, critically endangered. The Palawan peacock‑pheasant is a ground-dwelling, endemic bird of Palawan, culturally significant, vulnerable due to forest loss and hunting, and relies on intact lowland forests. Conservation efforts on Palawan are crucial to preserve this unique species..",
+        img: "https://static.inaturalist.org/photos/45924388/large.jpg"
+    },
+    "Mindoro": {
+        sci: "Bubalus mindorensis",
+        info: "Endemic dwarf buffalo. The Tamaraw (Bubalus mindorensis) is a critically endangered dwarf buffalo, endemic to the Philippine island of Mindoro, known as the country's largest land mammal, facing extinction due to habitat loss (farming, logging) and hunting, with only a few hundred remaining, residing mainly in Mt. Iglit-Baco National Park, and exhibiting nocturnal, solitary behaviors. Local studies show population recovery in protected areas.",
+        img: "https://upload.wikimedia.org/wikipedia/commons/0/0b/Bubalus_mindorensis_by_Gregg_Yan_01.jpg"
+    },
+    "Bohol": {
+        sci: "Carlito syrichta",
+        info: "World's smallest primate, endemic.The Bohol tarsier is a tiny, nocturnal, and arboreal primate endemic to the Philippines. Bohol plays a key role in its conservation through sanctuaries, ecotourism, and community involvement. The species is vulnerable to habitat loss, human disturbance, and stress from tourism, making local protection and habitat management essential. Local studies show forest preservation helps population.",
+        img: "https://i.pinimg.com/736x/b6/de/3b/b6de3b0c97f2741ba9e793d4c47dde39.jpg"
+    },
+    "Cebu": {
+        sci: "Rhincodon typus",
+        info: "Whale shark. Rhincodon typus in Cebu refers to the famous whale shark encounters in Oslob, Cebu, where fishermen started hand-feeding these gentle giants (locally called butanding), leading to guaranteed, year-round sightings for tourists, especially November to May, though this practice alters their natural behavior and raises conservation concerns, notes. These massive filter feeders, the world's largest fish, are lured close to shore for unique swimming and snorkeling experiences, making Oslob a major marine tourism spot despite debates over sustainabilit.",
+        img: "https://t4.ftcdn.net/jpg/12/60/97/01/360_F_1260970160_MoxwoUGbPsFC2rPVxD3nTqHZKInwhRHU.jpg"
+    },
+    "Davao Oriental Crocodile": {
+        sci: "Crocodylus porosus",
+        info: "Largest reptile.Crocodylus porosus (Saltwater Crocodile) is found in the Philippines, including areas around Davao, but the famous Davao Crocodile Park focuses on both saltwater and the endemic Philippine Crocodile (C. mindorensis). The region is known for large specimens, with the world's largest captive saltwater croc, Lolong, captured in the Philippines, though not Davao itself. Davao Crocodile Park & Zoo showcases these reptiles, alongside conservation efforts by groups like Crocodylus Porosus Phils., Inc., highlighting the need to protect these magnificent, powerful predators. protected mangroves increase population.",
+        img: "https://tourism.davaocity.gov.ph/wp-content/uploads/2018/10/Davao-Crocodile-Park-2.jpg"
+    },
+    "Davao": {
+        sci: "Pithecophaga jefferyi",
+        info: "Philippine Eagle. The Philippine Eagle (Pithecophaga jefferyi), the national bird of the Philippines, is a critically endangered species endemic to the country's forests. Extensive local studies and information, primarily led by the Philippine Eagle Foundation (PEF), focus on its biology, habitat, and urgent conservation needs: nest monitoring and reforestation programs protect population.",
+        img: "https://www.discoverthephilippines.com/wp-content/uploads/2023/07/philippine-eagle.jpg"
+    },
+    "Leyte": {
+        sci: "Sus cebifrons",
+        info: "Endangered pig species. The term Sus cebifrons leyte refers to the population of the Visayan warty pig found on the island of Leyte, Philippines. The species is classified as critically endangered by the International Union for Conservation of Nature (IUCN)",
+        img: "https://i.pinimg.com/1200x/1c/9f/03/1c9f03c5e56b14bb5f11dbcbc9af5d53.jpg"
+    },
+    "Siargao": {
+        sci: "Birgus latro",
+        info: "Coconut crab. Birgus latro, or the coconut crab, is the world's largest land arthropod, known for its immense size (up to 4kg/9lbs, 3ft span) and ability to crack coconuts and climb trees, but it's a vulnerable species in the Philippines, including near Siargao, facing threats from overharvesting as a delicacy, requiring conservation efforts for its slow reproduction and long lifespan (60+ years).",
+        img: "https://upload.wikimedia.org/wikipedia/commons/0/0a/Coconut_Crab_Birgus_latro.jpg"
+    },
+    "Baguio": {
+        sci: "Viverra tangalunga",
+        info: "Nocturnal carnivore. Viverra tangalunga the Malayan Civet, is a nocturnal, omnivorous mammal found in the Philippines, known for its spotted grey coat, dark legs, and ringed tail; it's related to mongooses, not cats, and lives solitary lives in forests, eating small animals, fruits, and insects, but faces threats from habitat loss and hunting for poultry raiding, though it's classified as Least Concern by IUCN. Information specific to Baguio (Philippines) isn't detailed in general searches, but it's present in the Philippines, so local sightings likely occur in forested, cooler areas like the mountains around Baguio.",
+        img: "https://upload.wikimedia.org/wikipedia/commons/5/56/Malay_civet.jpg"
+    }
+};
+
+// PIN FUNCTIONS
+function openPin(e,name){
+    e.stopPropagation();
+    const data = pinData[name];
+    if(data){
+        const popup = document.getElementById("pinPopup");
+        document.getElementById("pinTitle").innerText = name;
+        document.getElementById("pinSci").innerText = data.sci;
+        document.getElementById("pinImg").src = data.img;
+
+        popup.style.display = "block";
+        popup.classList.remove("fade-slide-down"); 
+        void popup.offsetWidth;
+        popup.classList.add("fade-slide-down");
+
+        document.getElementById("discoverMore").onclick = function(){
+            const infoBox = document.getElementById("infoBox");
+            document.getElementById("infoTitle").innerText = name;
+            document.getElementById("infoText").innerText = data.info;
+
+            infoBox.classList.remove("fade-in");
+            void infoBox.offsetWidth;
+            infoBox.classList.add("fade-in");
+
+            closePin();
+        };
+    }
+}
+function closePin(){ document.getElementById("pinPopup").style.display="none"; }
+
+// SPECIES FUNCTIONS
+function openSpecies(type,name,desc,img){
+    const speciesPopup = document.getElementById("speciesPopup");
+    document.getElementById("speciesTitle").innerText = name + " (" + type + ")";
+    document.getElementById("speciesImg").src = img;
+    document.getElementById("speciesDesc").innerText = desc;
+
+    speciesPopup.style.display = "block";
+    speciesPopup.classList.remove("fade-slide-up");
+    void speciesPopup.offsetWidth;
+    speciesPopup.classList.add("fade-slide-up");
+}
+function closeSpecies(){ document.getElementById("speciesPopup").style.display="none"; }
+
+// MINI MAP FUNCTIONS
+function openMapModal(){ document.getElementById("mapModal").style.display="flex"; }
+function closeMap(){ document.getElementById("mapModal").style.display="none"; }
+function closeModalOutside(e){ if(e.target.id=="mapModal"){closeMap();} }
+</script>
+
+</body>
+</html>
